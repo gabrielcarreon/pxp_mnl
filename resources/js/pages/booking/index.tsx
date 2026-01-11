@@ -1,4 +1,3 @@
-import { Calendar } from '@/components/calendar';
 import { DataTable } from '@/components/datatable';
 import { Button } from '@/components/ui/button';
 import { useConfirm } from '@/hooks/use-confirm';
@@ -8,6 +7,8 @@ import { destroy, edit } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { type BreadcrumbItem } from '@/types';
 import { Season } from '@/types/globals';
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import FullCalendar from '@fullcalendar/react';
 import { Head, Link, router } from '@inertiajs/react';
 import {
   DropdownMenu,
@@ -18,6 +19,8 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { CalendarHeader } from './calendar-header';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -26,7 +29,8 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-export default function Booking({ bookings }) {
+export default function Booking({ bookings, month_booking, month, year }) {
+  const calendarRef = useRef(null);
   const confirm = useConfirm();
   const columns: ColumnDef<Season>[] = [
     {
@@ -99,6 +103,10 @@ export default function Booking({ bookings }) {
     },
   ];
 
+  useEffect(() => {
+    calendarRef.current?.getApi().gotoDate(new Date(year, month, 0));
+  }, [year, month]);
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Booking" />
@@ -109,7 +117,15 @@ export default function Booking({ bookings }) {
             Manage, track, and approve camera rentals.
           </p>
         </div>
-        <Calendar />
+        <div>
+          <CalendarHeader />
+          <FullCalendar
+            ref={calendarRef}
+            plugins={[dayGridPlugin]}
+            headerToolbar={false}
+            events={month_booking}
+          />
+        </div>
         <div>
           <DataTable
             config={{
