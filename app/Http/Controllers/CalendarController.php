@@ -3,18 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class BookingController extends Controller
+class CalendarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return Inertia::render('booking/index', [
-            'bookings' => fn () => Booking::orderBy('created_at', 'desc')->paginate($request->rows ?? 10),
+        $month = $request->month ?? Carbon::now()->format('m');
+        $year = $request->year ?? Carbon::now()->format('Y');
+
+        return Inertia::render('calendar/index', [
+            'month_booking' => fn () => Booking::orderBy('pickup_date', 'desc')
+                ->whereRaw('MONTH(pickup_date) = ? and YEAR(pickup_date) = ?', [$month, $year])
+                ->join('cameras', 'bookings.camera_id', '=', 'cameras.id')
+                ->selectRaw('cameras.camera_name AS title, pickup_date AS start, dropoff_date as end, 1 as allDay, hsl as backgroundColor')
+                ->get(),
+            'month' => fn () => $month,
+            'year' => fn () => $year,
+            'first_transaction' => fn () => Booking::orderBy('pickup_date', 'asc')->first(),
         ]);
     }
 

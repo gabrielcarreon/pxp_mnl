@@ -6,22 +6,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { bookings } from '@/routes';
+import { calendar } from '@/routes';
 import { router, usePage } from '@inertiajs/react';
 import { formatDate } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
 
 const months = [
-  { label: 'January', value: 1 },
-  { label: 'February', value: 2 },
-  { label: 'March', value: 3 },
-  { label: 'April', value: 4 },
-  { label: 'May', value: 5 },
-  { label: 'June', value: 6 },
-  { label: 'July', value: 7 },
-  { label: 'August', value: 8 },
-  { label: 'September', value: 9 },
+  { label: 'January', value: '01' },
+  { label: 'February', value: '02' },
+  { label: 'March', value: '03' },
+  { label: 'April', value: '04' },
+  { label: 'May', value: '05' },
+  { label: 'June', value: '06' },
+  { label: 'July', value: '07' },
+  { label: 'August', value: '08' },
+  { label: 'September', value: '09' },
   { label: 'October', value: 10 },
   { label: 'November', value: 11 },
   { label: 'December', value: 12 },
@@ -49,9 +49,9 @@ export const CalendarHeader = () => {
     <div className="mb-4 flex items-center justify-between gap-2">
       <div className="flex gap-2">
         <Select
-          value={month}
+          value={String(month)}
           onValueChange={(e) => {
-            router.visit(bookings.url(), {
+            router.visit(calendar.url(), {
               preserveState: true,
               preserveScroll: true,
               data: {
@@ -66,7 +66,7 @@ export const CalendarHeader = () => {
           </SelectTrigger>
           <SelectContent>
             {months.map((item) => (
-              <SelectItem key={item.value} value={String(item.value)}>
+              <SelectItem key={String(item.value)} value={String(item.value)}>
                 {item.label}
               </SelectItem>
             ))}
@@ -75,7 +75,7 @@ export const CalendarHeader = () => {
         <Select
           value={String(year)}
           onValueChange={(e) => {
-            router.visit(bookings.url(), {
+            router.visit(calendar.url(), {
               preserveState: true,
               preserveScroll: true,
               data: {
@@ -101,7 +101,7 @@ export const CalendarHeader = () => {
         <Button
           onClick={() => {
             if (month <= 1) {
-              router.visit(bookings.url(), {
+              router.visit(calendar.url(), {
                 preserveState: true,
                 preserveScroll: true,
                 data: {
@@ -110,7 +110,7 @@ export const CalendarHeader = () => {
                 },
               });
             } else {
-              router.visit(bookings.url(), {
+              router.visit(calendar.url(), {
                 preserveState: true,
                 preserveScroll: true,
                 data: {
@@ -127,7 +127,7 @@ export const CalendarHeader = () => {
         <Button
           onClick={() => {
             if (month >= 12) {
-              router.visit(bookings.url(), {
+              router.visit(calendar.url(), {
                 preserveState: true,
                 preserveScroll: true,
                 data: {
@@ -136,7 +136,7 @@ export const CalendarHeader = () => {
                 },
               });
             } else {
-              router.visit(bookings.url(), {
+              router.visit(calendar.url(), {
                 preserveState: true,
                 preserveScroll: true,
                 data: {
