@@ -26,6 +26,13 @@ class CalendarController extends Controller
             'month' => fn () => $month,
             'year' => fn () => $year,
             'first_transaction' => fn () => Booking::orderBy('pickup_date', 'asc')->first(),
+            'pending_bookings_count' => fn () => Booking::where('status', 'pending')->count(),
+            'pending_bookings' => fn () => Booking::orderBy('created_at', 'asc')
+                ->where('status', 'pending')
+                ->with('camera')
+                ->limit(5)
+                ->get(),
+
         ]);
     }
 
